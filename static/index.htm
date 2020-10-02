@@ -1,5 +1,5 @@
 <html><head>
-    <title>Arielle's HW1</title>
+    <title>UFO Sightings</title>
     
       <link href="https://fonts.googleapis.com/css?family=Lato:400,700|Raleway:400,700" rel="stylesheet">
     
@@ -24,17 +24,7 @@
     </head>
     <body style="background-color:#999fa8;">
       <div class="container larger">
-        <p style="color: white; font-family:Verdana; font-size:250%;"> <b>CARETAKERS OF TREES IN SAN FRANCISCO</b></p>
-        
-        <p style="color: white; font-family:Verdana"> <ul>
-            <li style="color: white; font-family:Verdana; font-size:100%; ">Different colors represent different caretakers</li> <ul>
-                <li style="color: #1a7540; font-family:Verdana; font-size:75%; "><b>Privately-owned</b></li>
-                <li style="color: #1c23eb; font-family:Verdana; font-size:75%; "><b>DPW-owned</b></li>
-                <li style="color: #a11b53; font-family:Verdana; font-size:75%; "><b>Port-owned</b></li>
-                <li style="color: black; font-family:Verdana; font-size:75%; padding-bottom:1em"><b>Other colors represent various other owners</b></li>
-            </ul>
-            <li style="color: white; font-size:100%; font-family:Verdana">Size of the point represents size of the tree (diameter at breast height)</li>
-          </ul></p>
+        <p style="color: white; font-family:Verdana; font-size:250%;"> <b>UFo Sightings</b></p>
       <svg id="points" height="900" width="900" style="background: #999fa8; margin-top:50px" >
     
       </svg>
@@ -43,114 +33,116 @@
     
       <script id="notes1">
     
-      const svg = d3.select("#points");
-      const width = svg.attr("width");
-      const height = svg.attr("height");
-      const margin = { top: 20, right: 20, bottom: 20, left:20};
-      const mapWidth = width - margin.left - margin.right;
-      const mapHeight = height - margin.top - margin.bottom;
-      const map = svg.append("g")
-                      .attr("transform","translate("+margin.left+","+margin.top+")");
-    
-      // Let's make a map of all of the municipal trees in San Francisco
-      // With any luck, we ought to be able to visualize the streets/blocks in the city, since trees line them
-      //   (this is really just an excuse to make a lot of dots)
       
-      // Datasets for today:
-      //  "../datasets/SF-Neighborhoods.json"
-      //  "../datasets/Street_Tree_List_smaller.csv"
-    
-    
-      // 1. Make the visualization
-      //  (refer to 03/04 notes for more comments)
       const requestData = async function() {
+       
+        const UFO = await d3.csv("./scrubbed.csv");
         
-        const sf = await d3.json("./SF-Neighborhoods.geo.json");
-        console.log(sf);
-        
-        // We find that the feature we want to visualize is the SFNeighborhoods property within objects
-        //  Always search .objects for different features to show in a topoJSON dataset
-        var neighborhoods = topojson.feature(sf, sf.objects.SFNeighborhoods);
-        
-        // We use Mercator projection instead of a "better" projection because it's more familiar
-        // It also leads to a flat line on the bottom of the city due to how the projection makes all
-        //  latitude lines flat (which allows rhumb line equivalency)
-        var projection = d3.geoMercator().fitSize([mapWidth, mapHeight], neighborhoods);
-        var path = d3.geoPath().projection(projection);
-        
-        // Draw neighborhoods
-        // Just as in our line generators, the scale is used by the generator to take complex data and
-        //  generate fancy paths
-        map.selectAll("path.neighborhood").data(neighborhoods.features)
-          .join("path")
-          .attr("class", "neighborhood")
-          .attr("d", path);
-          
-        //changed csv name
-        const trees = await d3.csv("./Street_Tree_List-2020-08-20_FILTERED.csv");
-        
-        let species = [];
-
-        let caretaker = []
-        
+       
         // We need to figure out where to position the dots. Since we may have a lot of them, let's process
         //  the data ahead of time and add to our dict
         // (Main reason for doing this is that otherwise we would have to call projection() twice, once
         //    for 'cx' and once for 'cy')
-        trees.forEach( d => {
+        
+        
+        let dataList = [];
+        //gets important data that we care about from data file
+        UFO.forEach( d => {
           
-          // Use the projection just like a scale to convert from lng/lat to pixels
-          d.Position = projection( [d.Longitude, d.Latitude] );
-          
+          var temp = {
+            "Shape": d.shape,
+            "Country": d.country,
+            "Year": d.datetime.split(" ")[0].split("/")[2],
+            "Month": d.datetime.split(" ")[0].split("/")[0],
+            "Day": d.datetime.split(" ")[0].split("/")[1],
+            "Comments": d.comments
+          }; 
+
+          dataList.push(temp);
+
         });
         
-
-        function getRandomColor() {
-            var letters = '0123456789ABCDEF';
-            var color = '#';
-            for (var i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
+        //console.log(dataList); 
+        //gets number of sightings per shape (~29 or 30) 
+        function getShapeFrequency(UFOdata){
+          let shapeFreq = {}; 
+          for (var i = 0; i<UFOdata.length; i++){
+            var shape = UFOdata[i]["Shape"];
+            if (shape in shapeFreq) {
+              shapeFreq[shape] +=1;
+            } else {
+              shapeFreq[shape] = 1;
             }
-            return color;
+          };
+          return shapeFreq; 
         }
-        let colorList = []
-        // trees.forEach( d => {
-        //     if (!species.includes(d.qSpecies)) {
-        //         species.push(d.qSpecies); 
-        //         colorList.push(getRandomColor()); 
-        //     }
-        // }); 
+        //console.log(getShapeFrequency(dataList)); 
+
+        function getShapeFrequencyByCountry(UFOdata, country) {
+          let shapeFreq = {};
+          for (var i = 0; i<UFOdata.length; i++){
+            var nation = UFOdata[i]["Country"];
+            if (nation == country){
+              var shape = UFOdata[i]["Shape"];
+              if (shape in shapeFreq) {
+                shapeFreq[shape] += 1;
+              } else {
+                shapeFreq[shape] = 1;
+              }
+            } 
+          };
+          return shapeFreq;
+        }
+
+        console.log(getShapeFrequencyByCountry(dataList, "gb")); 
+        
+
+      //   function getRandomColor() {
+      //       var letters = '0123456789ABCDEF';
+      //       var color = '#';
+      //       for (var i = 0; i < 6; i++) {
+      //           color += letters[Math.floor(Math.random() * 16)];
+      //       }
+      //       return color;
+      //   }
+      //   let colorList = []
+      //   // trees.forEach( d => {
+      //   //     if (!species.includes(d.qSpecies)) {
+      //   //         species.push(d.qSpecies); 
+      //   //         colorList.push(getRandomColor()); 
+      //   //     }
+      //   // }); 
 
 
-        trees.forEach( d => {
-            if (!caretaker.includes(d.qCaretaker)) {
-                caretaker.push(d.qCaretaker); 
-                //colorList.push(getRandomColor()); 
-            }
-        }); 
+      //   trees.forEach( d => {
+      //       if (!caretaker.includes(d.qCaretaker)) {
+      //           caretaker.push(d.qCaretaker); 
+      //           //colorList.push(getRandomColor()); 
+      //       }
+      //   }); 
 
-        //random colors to fill list to required length, but these points are not noticeable in visualization 
-        colorList = ["#1a7540", "#1c23eb","#a11b53", "#6ab8cc", "#7c6acc", "#97cc68", "#ede964", "#edbd64", "#ed8d64", "#6472ed", "#ed6464", 
-        getRandomColor(), getRandomColor(), getRandomColor(), getRandomColor(),getRandomColor(),getRandomColor(),getRandomColor(),
-        getRandomColor(),getRandomColor(),getRandomColor(),getRandomColor(),getRandomColor()]; 
+      //   //random colors to fill list to required length, but these points are not noticeable in visualization 
+      //   colorList = ["#1a7540", "#1c23eb","#a11b53", "#6ab8cc", "#7c6acc", "#97cc68", "#ede964", "#edbd64", "#ed8d64", "#6472ed", "#ed6464", 
+      //   getRandomColor(), getRandomColor(), getRandomColor(), getRandomColor(),getRandomColor(),getRandomColor(),getRandomColor(),
+      //   getRandomColor(),getRandomColor(),getRandomColor(),getRandomColor(),getRandomColor()]; 
 
-        //console.log(species.length); 
-        console.log(caretaker.length);
+      //   //console.log(species.length); 
+      //   console.log(caretaker.length);
 
-        //for fill: function (d) { return colorList.indexOf(d.qSpecies);}
+      //   //for fill: function (d) { return colorList.indexOf(d.qSpecies);}
 
-        // Draw circles using the Positions we just made
-        map.selectAll("circle").data(trees)
-           .join("circle")
-           .attr("r", function (d) { return d.DBH/10;})
-           .attr("fill", function (d) { return colorList[caretaker.indexOf(d.qCaretaker)];})
-           .attr("opacity", 0.4)
-           .attr("cx", d => d.Position[0])
-           .attr("cy", d => d.Position[1]);
+      //   // Draw circles using the Positions we just made
+      //   map.selectAll("circle").data(trees)
+      //      .join("circle")
+      //      .attr("r", function (d) { return d.DBH/10;})
+      //      .attr("fill", function (d) { return colorList[caretaker.indexOf(d.qCaretaker)];})
+      //      .attr("opacity", 0.4)
+      //      .attr("cx", d => d.Position[0])
+      //      .attr("cy", d => d.Position[1]);
         
         
         
-      }
+       }
       requestData();
       
       
