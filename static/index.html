@@ -134,7 +134,7 @@
       //shape = "circle" ...
       //will return {"Shape": "circle", 1}
       function totalShapeDict(shape, UFOdata) {
-        var shapeDict = {'0Shape': shape, '1930': 0, '1940': 0, '1950': 0, '1960': 0, '1970': 0, '1980': 0, '1990': 0, '2000': 0, '2010': 0, '2020': 0}; 
+        var shapeDict = {'0Shape': shape,'1910':0, '1920': 0, '1930': 0, '1940': 0, '1950': 0, '1960': 0, '1970': 0, '1980': 0, '1990': 0, '2000': 0, '2010': 0, '2020': 0}; 
         for (var i = 0; i<UFOdata.length; i++){
           var dataShape = UFOdata[i]["Shape"]; 
           if (dataShape === shape){
@@ -143,7 +143,16 @@
             if ((dec === "2") || (dec === "3") || (dec === "4") || (dec === "5") || (dec === "6") || (dec === "7") || (dec === "8") || (dec === "9")) {
               var decade = ("19").concat(dec, "0"); 
               shapeDict[decade] += 1; 
-            } else {
+            } else if (dec === "1") {
+              if (year.charAt(0) === "1") {
+                var decade = ("19").concat(dec, "0"); 
+                shapeDict[decade] += 1;
+              } else {
+                var decade = ("20").concat(dec, "0"); 
+                shapeDict[decade] += 1;
+              }
+            }
+            else {
               var decade2000= ("20").concat(dec, "0"); 
               shapeDict[decade2000] += 1; 
             };
