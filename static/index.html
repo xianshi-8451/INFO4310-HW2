@@ -54,12 +54,20 @@
         let shapes = []; 
         for (var i = 0; i<UFOdata.length; i++){
           var shape = UFOdata[i]["Shape"];
-          if (!(shape in shapes)) {
-            shapes.push(shape);
-          } 
+          if (shape !== null) {
+            //console.log("in here"); 
+            if (!(shapes.includes(shape))) {
+              shapes.push(shape);
+              //console.log("inside here"); 
+
+            }; 
+          };
         };
         return shapes; 
       }
+
+      //console.log("hi"); 
+      //console.log(getShapes(dataList));
 
       function getShapeFrequency(UFOdata){
           let shapeFreq = {}; 
@@ -109,18 +117,19 @@
           }
       }
 
-      // function shapesArray(UFOdata) {
-      //   var array = getShapes(UFOdata);
-      //   var finalData = []; 
-      //   for (var i = 0; i<array.length; i++) {
-      //     var temp = totalShapeDict(array[i], UFOdata);
-      //     finalData.push(temp); 
-      //     console.log("in here"); 
-      //   };
-      //   return finalData;
-      // }
+      function shapesArray(UFOdata) {
+        var shapearray = getShapes(UFOdata);
+        console.log(shapearray); 
+        var finalData = []; 
+        for (var i = 0; i<shapearray.length; i++) {
+          var temp = totalShapeDict(shapearray[i], UFOdata);
+          finalData.push(temp); 
+          console.log("in here"); 
+        };
+        return finalData;
+      }
 
-      //console.log(shapesArray(dataList)); 
+      console.log(shapesArray(dataList)); 
       //decade = 1940 or 1950, ... 
       //shape = "circle" ...
       //will return {"Shape": "circle", 1}
