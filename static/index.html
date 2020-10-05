@@ -86,17 +86,88 @@
       }
 
       
-      //NEED TO FIND OUT NUMBER OF EACH SHAPE PER YEAR??
-      // function getShapesPerYear(UFOdata){
-      //     let shapesPerYear = {}; 
-      //     for (var i = 0; i<UFOdata.length; i++){
-      //       var year = UFOdata[i]["Year"];
-      //       if (year in shapesPerYear) {
-      //         shapeYears.push(year);
-      //     };
-      //     return shapeYears; 
-      //     }
+
+      
+      //NEED TO FIND OUT NUMBER OF EACH SHAPE PER YEAR?? (PER DECADE IDEALLY)
+      //{"circle: {"1940": 100, "1950": 200, ...}, square: {1940": 100, "1950": 600, ...}, ...}
+      //[{"Shape": "circle", "1940": 100, "1950": 200, ...}, {"Shape": "square", "1940": 200, "1950": 600, ...}]
+      function getShapesPerYear(UFOdata){
+          let shapesPerYear = []; 
+          for (var i = 0; i<UFOdata.length; i++){
+            var year = UFOdata[i]["Year"];
+            var shape = UFOdata[i]["Shape"];
+            if (year in shapesPerYear) { 
+              if (shape in shapesPerYear[year])
+                  shapesPerYear[year][shape] += 1; 
+              else{
+                shapesPerYear[year][shape] = 1; 
+              } 
+            } else {
+              shapesPerYear[year] = {}; //NEED HELP WITH THIS LINE
+            };
+          return shapesPerYear; 
+          }
+      }
+
+      // function shapesArray(UFOdata) {
+      //   var array = getShapes(UFOdata);
+      //   var finalData = []; 
+      //   for (var i = 0; i<array.length; i++) {
+      //     var temp = totalShapeDict(array[i], UFOdata);
+      //     finalData.push(temp); 
+      //     console.log("in here"); 
+      //   };
+      //   return finalData;
       // }
+
+      //console.log(shapesArray(dataList)); 
+      //decade = 1940 or 1950, ... 
+      //shape = "circle" ...
+      //will return {"Shape": "circle", 1}
+      function totalShapeDict(shape, UFOdata) {
+        var shapeDict = {'Shape': shape, '1940': 0, '1950': 0, '1960': 0, '1970': 0, '1980': 0, '1990': 0, '2000': 0, '2010': 0, '2020': 0}; 
+        for (var i = 0; i<UFOdata.length; i++){
+          var dataShape = UFOdata[i]["Shape"]; 
+          if (dataShape === shape){
+            var year = UFOdata[i]["Year"];
+            var dec = year.charAt(2); 
+            if ((dec === "4") || (dec === "5") || (dec === "6") || (dec === "7") || (dec === "8") || (dec === "9")) {
+              var decade = ("19").concat(dec, "0"); 
+              shapeDict[decade] += 1; 
+            } else {
+              var decade2000= ("20").concat(dec, "0"); 
+              shapeDict[decade2000] += 1; 
+            };
+          };
+        };
+        return shapeDict; 
+      }
+
+      console.log(totalShapeDict("hexagon", dataList)); 
+
+      //decade = 1940 or 1950, ... 
+      //shape = "circle" ...
+      //will return number for that shape for that decade
+      function shapePerDecade(decade, shape, UFOdata) {
+        var totalNum = 0;
+        var count = 0; 
+        for (var i = 0; i<UFOdata.length; i++){
+          count += 1; 
+          var year = UFOdata[i]["Year"];
+          var dataShape = UFOdata[i]["Shape"];
+          if ((dataShape === shape) && (year - decade < 10)) {
+            totalNum += 1; 
+          }; 
+        
+        };
+        return totalNum; 
+      }
+
+      //console.log(dataList); 
+      //console.log(shapePerDecade(1980, "circle", dataList)); 
+      //console.log(getShapesPerYear(dataList)); 
+
+      //{1940: {circle: 10, square: 10}, }
       
       var shapeYears = getShapeYears(dataList); 
       var minYear = Math.min(shapeYears);
@@ -256,7 +327,7 @@
           return shapeFreq;
         }
 
-        console.log(getShapeFrequencyByCountry(dataList, "gb")); 
+        //console.log(getShapeFrequencyByCountry(dataList, "gb")); 
         
 
       //   function getRandomColor() {
