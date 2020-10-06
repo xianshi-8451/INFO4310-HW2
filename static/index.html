@@ -36,6 +36,12 @@
       let dataList = [];
       //gets important data that we care about from data file
       UFO.forEach( (d,i) => {
+        
+        if ((d.shape === "circle") || (d.shape === "sphere") || (d.shape === "disk") || (d.shape === "fireball")
+        || (d.shape === "oval") || (d.shape === "cigar") || (d.shape === "rectangle") || (d.shape === "chevron")
+        || (d.shape === "triangle") || (d.shape === "formation") || (d.shape === "egg") || (d.shape === "changing")
+        || (d.shape === "diamond") || (d.shape === "flash") || (d.shape === "teardrop") || (d.shape === "cone")
+        ||(d.shape === "cross") || (d.shape === "cylinder") || (d.shape === "light")) {
         var temp = {
           "Shape": d.shape,
           "Country": d.country,
@@ -43,9 +49,13 @@
           "Month": d.datetime.split(" ")[0].split("/")[0],
           "Day": d.datetime.split(" ")[0].split("/")[1],
           "Comments": d.comments
-        }; 
-
+        };
         dataList.push(temp);
+        }; 
+        
+      
+
+        
 
       });
       //console.log(dataList[0].Shape);
