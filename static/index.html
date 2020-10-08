@@ -80,7 +80,7 @@
 
       });
       //start update function
-      function update(dataList){
+      function update(dataList, updated){
 
       
       //update(dataList)
@@ -172,8 +172,38 @@
   //    .attr("transform", function(d) { return (x(d[0]) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) < Math.PI ? "rotate(180)" : "rotate(0)"; })
   //    .style("font-size", "11px")
   //    .attr("alignment-baseline", "middle")
+
+  
+  // xAxis = g => g
+  //   .attr("text-anchor", "middle")
+  //   .attr("class", "axisLabel")
+  //   .call(g => g.selectAll("g")
+  //     .data(total)
+  //     .join("g")
+  //       .attr("transform", d => `
+  //         rotate(${((x(d[0]) + x.bandwidth() / 2) * 180 / Math.PI - 90)})
+  //         translate(${innerRadius},0)
+  //       `)
+  //       .call(g => g.append("line")
+  //           .attr("x2", -5)
+  //           .attr("stroke", "white"))
+  //       .call(g => g.append("text")
+  //           .attr("transform", d => (x(d[0]) + x.bandwidth() / 2 + Math.PI / 2) % (2 * Math.PI) < Math.PI
+  //               ? "rotate(90)translate(0,16)"
+  //               : "rotate(-90)translate(0,-9)")
+  //           .text(d => d[0])))
+  //           .style("font-size", "8px")
+  //           .style("stroke", "white");
+  //     svg.append("g")
+  //     .call(xAxis);
+    
+      if (updated) {
+       svg.selectAll("g.axisLabel").remove();  
+      };
+
   xAxis = g => g
     .attr("text-anchor", "middle")
+    .attr("class", "axisLabel")
     .call(g => g.selectAll("g")
       .data(total)
       .join("g")
@@ -193,7 +223,7 @@
             .style("stroke", "white");
       svg.append("g")
       .call(xAxis);
-
+      
     yAxis = g => g
     .attr("text-anchor", "middle")
     .call(g => g.append("text")
@@ -222,45 +252,45 @@
   
 }    
 
-    update(allData); 
+    update(allData, false); 
     d3.select("#btn").on("click", event=>{
       let filterDataset = allData.filter(d=>{
         return (d.Country === "us"); 
       })
-      update(filterDataset); 
+      update(filterDataset, true); 
     });
     d3.select("#All").on("click", event=>{
-      update(allData); 
+      update(allData, true); 
     }); 
     d3.select("#US").on("click", event=>{
       let filterDataset = allData.filter(d=>{
         return (d.Country === "us"); 
       })
-      update(filterDataset); 
+      update(filterDataset, true); 
     });
     d3.select("#GB").on("click", event=>{
       let filterDataset = allData.filter(d=>{
         return (d.Country === "gb"); 
       })
-      update(filterDataset); 
+      update(filterDataset, true); 
     });
     d3.select("#DE").on("click", event=>{
       let filterDataset = allData.filter(d=>{
         return (d.Country === "de"); 
       })
-      update(filterDataset); 
+      update(filterDataset, true); 
     });
     d3.select("#AU").on("click", event=>{
       let filterDataset = allData.filter(d=>{
         return (d.Country === "au"); 
       })
-      update(filterDataset); 
+      update(filterDataset, true); 
     });
     d3.select("#CA").on("click", event=>{
       let filterDataset = allData.filter(d=>{
         return (d.Country === "ca"); 
       })
-      update(filterDataset); 
+      update(filterDataset, true); 
     });
 
       function getShapes(UFOdata){
