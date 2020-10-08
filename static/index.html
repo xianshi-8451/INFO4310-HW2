@@ -25,8 +25,8 @@
   }
   </style>
   <div id="my_dataviz"></div>
-  <h2 id="btn">Button</h2>
-<button id="All" type="button" class="btn btn-success">All Countries</button>
+  <!-- <h2 id="btn">Button</h2> -->
+<button id="All" color="#a0d29e" type="button" class="btn btn-success">All Countries</button>
 <button id="US" type="button" class="btn btn-secondary">United States</button>
 <button id="GB" type="button" class="btn btn-secondary">Great Britain</button>
 <button id="DE" type="button" class="btn btn-secondary">Germany</button>
@@ -114,7 +114,10 @@
         var z = d3.scaleOrdinal()
                     .domain(subgroups)
                     //.range(d3.schemeCategory10);
-                    .range(["#f57623", "#fb8e3f","#fda55f", "#fdbc83"]);
+                    //.range(["#a0d29e", "#91b09d","#487463", "#225149"]);
+                    //.range(["#225149", "#487463", "#729485", "#a0d29e"]);
+                    //.range(["#004800","#006703","#008627", "#28A745"]); 
+                    .range(["#005700","#415F8F","#28A745", "#91ABE1"]);
           let arcGen = d3.arc()
             .innerRadius(function(d) { return y(d[0]); })
             .outerRadius(function(d) { return y(d[1]); })
@@ -253,12 +256,12 @@
 }    
 
     update(allData, false); 
-    d3.select("#btn").on("click", event=>{
-      let filterDataset = allData.filter(d=>{
-        return (d.Country === "us"); 
-      })
-      update(filterDataset, true); 
-    });
+    // d3.select("#btn").on("click", event=>{
+    //   let filterDataset = allData.filter(d=>{
+    //     return (d.Country === "us"); 
+    //   })
+    //   update(filterDataset, true); 
+    // });
     d3.select("#All").on("click", event=>{
       update(allData, true); 
     }); 
