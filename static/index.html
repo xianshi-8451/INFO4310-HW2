@@ -26,12 +26,12 @@
   </style>
   <div id="my_dataviz"></div>
   <h2 id="btn">Button</h2>
-<button type="button" class="btn btn-success">All Countries</button>
-<button type="button" class="btn btn-secondary">United States</button>
-<button type="button" class="btn btn-secondary">Great Britain</button>
-<button type="button" class="btn btn-secondary">Germany</button>
-<button type="button" class="btn btn-secondary">Canada</button>
-<button type="button" class="btn btn-secondary">Australia</button>
+<button id="All" type="button" class="btn btn-success">All Countries</button>
+<button id="US" type="button" class="btn btn-secondary">United States</button>
+<button id="GB" type="button" class="btn btn-secondary">Great Britain</button>
+<button id="DE" type="button" class="btn btn-secondary">Germany</button>
+<button id="CA" type="button" class="btn btn-secondary">Canada</button>
+<button id="AU" type="button" class="btn btn-secondary">Australia</button>
     <script id="circularbarplot">
   
   var margin = {top: 100, right: 0, bottom: 0, left: 0},
@@ -228,7 +228,40 @@
         return (d.Country === "us"); 
       })
       update(filterDataset); 
-    })
+    });
+    d3.select("#All").on("click", event=>{
+      update(allData); 
+    }); 
+    d3.select("#US").on("click", event=>{
+      let filterDataset = allData.filter(d=>{
+        return (d.Country === "us"); 
+      })
+      update(filterDataset); 
+    });
+    d3.select("#GB").on("click", event=>{
+      let filterDataset = allData.filter(d=>{
+        return (d.Country === "gb"); 
+      })
+      update(filterDataset); 
+    });
+    d3.select("#DE").on("click", event=>{
+      let filterDataset = allData.filter(d=>{
+        return (d.Country === "de"); 
+      })
+      update(filterDataset); 
+    });
+    d3.select("#AU").on("click", event=>{
+      let filterDataset = allData.filter(d=>{
+        return (d.Country === "au"); 
+      })
+      update(filterDataset); 
+    });
+    d3.select("#CA").on("click", event=>{
+      let filterDataset = allData.filter(d=>{
+        return (d.Country === "ca"); 
+      })
+      update(filterDataset); 
+    });
 
       function getShapes(UFOdata){
       let shapes = []; 
